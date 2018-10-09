@@ -85,6 +85,18 @@ int main()
       player.move(-1 * playerSpeed, 0);
     }
 
+    // limit movement to boundaries
+    std::cout << window.getSize().x << "|" << window.getSize().y << std::endl;
+    // origin of shape is top left
+    if (player.getPosition().x < 0)
+      player.setPosition(0, player.getPosition().y);
+    if (player.getPosition().y < 0)
+      player.setPosition(player.getPosition().x, 0);
+    if (player.getPosition().x + player.getGlobalBounds().width > window.getSize().x)
+      player.setPosition(window.getSize().x - player.getGlobalBounds().width, player.getPosition().y);
+    if (player.getPosition().y + player.getGlobalBounds().height > window.getSize().y)
+      player.setPosition(player.getPosition().x, window.getSize().y - player.getGlobalBounds().height);
+
     // DRAWING
     // clear everything black
     window.clear(sf::Color::Black);
