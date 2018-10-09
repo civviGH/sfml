@@ -1,6 +1,9 @@
 # vim
 *.swp
 
+# cv output file
+sfmlapp
+
 # Prerequisites
 *.d
 
