@@ -112,7 +112,9 @@ int main()
       player.setPosition(player.getPosition().x, window.getSize().y - player.getGlobalBounds().height);
 
     // send new position to server
-    packet << (int)player.getPosition().x << player.getPosition().y;
+    sf::Int64 playerPositionX = player.getPosition().x;
+    sf::Int64 playerPositionY = player.getPosition().y;
+    packet << playerPositionX << playerPositionY;
     socket.send(packet, recipient, port);
 
     // DRAWING
