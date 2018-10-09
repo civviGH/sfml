@@ -2,7 +2,7 @@
 *.swp
 
 # cv output file
-sfmlapp
+*sfmlapp
 
 # Prerequisites
 *.d
