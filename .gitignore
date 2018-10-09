@@ -3,6 +3,8 @@
 
 # cv output file
 *sfmlapp
+*clientapp
+*serverapp
 
 # Prerequisites
 *.d
