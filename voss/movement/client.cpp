@@ -20,7 +20,6 @@ int main()
     std::cout << "Error loading network socket in port 54001" << std::endl;
   }
   socket.setBlocking(false);
-  sf::Packet packet;
   sf::IpAddress recipient = "192.168.178.92";
   unsigned short port = 54000;
   
@@ -114,6 +113,7 @@ int main()
     // send new position to server
     sf::Int64 playerPositionX = player.getPosition().x;
     sf::Int64 playerPositionY = player.getPosition().y;
+    sf::Packet packet;
     packet << playerPositionX << playerPositionY;
     socket.send(packet, recipient, port);
 

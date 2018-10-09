@@ -35,6 +35,9 @@ int main()
   // create player
   sf::CircleShape player(10);
   player.setFillColor(sf::Color(100, 250, 50));
+  // client player
+  sf::CircleShape clientPlayer(10);
+  clientPlayer.setFillColor(sf::Color(250, 50, 50));
 
   // run the program as long as the window is open
   while (window.isOpen())
@@ -47,13 +50,6 @@ int main()
       if (event.type == sf::Event::Closed)
         window.close();
       
-      // check if we have network position information
-      socket.receive(packet, sender, port);
-      if (packet >> clientPositionX >> clientPositionY)
-      {
-        std::cout << "client position update to (" << clientPositionX << "," << clientPositionY << ")" << std::endl;
-      }
-
       // movement event
       if (event.type == sf::Event::KeyPressed)
       {
@@ -86,6 +82,15 @@ int main()
         }
       }
     }
+
+    // check if we have network position information
+    socket.receive(packet, sender, port);
+    if (packet >> clientPositionX >> clientPositionY)
+    {
+      std::cout << "client position update to (" << clientPositionX << "," << clientPositionY << ")" << std::endl;
+    }
+    clientPlayer.setPosition(clientPositionX, clientPositionY);
+
 
     //DEBUG
     //std::cout << "control:" << wPressed << std::endl;
@@ -126,6 +131,7 @@ int main()
   
     // draw player
     window.draw(player);
+    window.draw(clientPlayer);
 
     // clear buffer and display
     window.display();
