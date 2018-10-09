@@ -25,7 +25,7 @@ int main()
   
 
   // window management
-  sf::RenderWindow window(sf::VideoMode(800, 600), "My window");
+  sf::RenderWindow window(sf::VideoMode(800, 600), "client");
   window.setFramerateLimit(60);
   window.setKeyRepeatEnabled(false);
   
