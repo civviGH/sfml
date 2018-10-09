@@ -15,16 +15,14 @@ int main()
   
   // socket for network
   sf::UdpSocket socket;
-  if (socket.bind(54000) != sf::Socket::Done)
+  if (socket.bind(54001) != sf::Socket::Done)
   {
-    std::cout << "Error loading network socket in port 54000" << std::endl;
+    std::cout << "Error loading network socket in port 54001" << std::endl;
   }
   socket.setBlocking(false);
-  sf::Int64 clientPositionX;
-  sf::Int64 clientPositionY;
   sf::Packet packet;
-  sf::IpAddress sender;
-  unsigned short port;
+  sf::IpAddress recipient = "192.168.178.92";
+  unsigned short port = 54000;
   
 
   // window management
@@ -46,13 +44,6 @@ int main()
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed)
         window.close();
-      
-      // check if we have network position information
-      socket.receive(packet, sender, port);
-      if (packet >> clientPositionX >> clientPositionY)
-      {
-        std::cout << "client position update to (" << clientPositionX << "," << clientPositionY << ")" << std::endl;
-      }
 
       // movement event
       if (event.type == sf::Event::KeyPressed)
@@ -119,6 +110,10 @@ int main()
       player.setPosition(window.getSize().x - player.getGlobalBounds().width, player.getPosition().y);
     if (player.getPosition().y + player.getGlobalBounds().height > window.getSize().y)
       player.setPosition(player.getPosition().x, window.getSize().y - player.getGlobalBounds().height);
+
+    // send new position to server
+    packet << (int)player.getPosition().x << player.getPosition().y;
+    socket.send(packet, recipient, port);
 
     // DRAWING
     // clear everything black

@@ -10,7 +10,7 @@ int main()
     std::cout << "error binding socket to 54000" << std::endl;
   }
   std::cout << "server startet on server 54001" << std::endl;
-  //socket.setBlocking(false);
+  socket.setBlocking(false);
   std::string s;
   sf::Packet packet;
   sf::IpAddress recipient;
