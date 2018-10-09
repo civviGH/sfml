@@ -54,6 +54,14 @@ int main()
         if (event.key.code == sf::Keyboard::A)
           aPressed = false;
       }
+      // mouseclick events
+      if (event.type == sf::Event::MouseButtonPressed)
+      {
+        if (event.mouseButton.button == sf::Mouse::Left)
+        {
+          std::cout << "left mouse clicked at (" << event.mouseButton.x << "," << event.mouseButton.y << ")" << std::endl;
+        }
+      }
     }
 
     //DEBUG
