@@ -6,3 +6,16 @@ modulares einbinden von build optionen und bossen. evtl recycling von boss skill
 
 top down
 simple formen, klare farben
+
+
+
+connect
+  ip port merken
+position update
+disconnect
+
+server:
+  liste von playern.
+  solang aufm socket lauschen, bis man alles gehoert hat
+  jedem sagen was man weiss
+  rendern was man weiss  
