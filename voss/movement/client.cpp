@@ -20,7 +20,7 @@ int main()
     std::cout << "Error loading network socket in port 54001" << std::endl;
   }
   socket.setBlocking(false);
-  sf::IpAddress recipient = "192.168.178.92";
+  sf::IpAddress recipient = "192.168.200.151";
   unsigned short port = 54000;
   
 
