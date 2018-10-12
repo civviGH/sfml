@@ -2,6 +2,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Network.hpp>
 #include <iostream>
+#include <string>
 
 int main()
 {
@@ -15,13 +16,22 @@ int main()
   
   // socket for network
   sf::UdpSocket socket;
-  if (socket.bind(54001) != sf::Socket::Done)
+  int portToBindTo;
+  std::string serverIpAddress;
+  std::cout << "Please enter port number for own socket: ";
+  std::cin >> portToBindTo;
+  if (socket.bind(portToBindTo) != sf::Socket::Done)
   {
-    std::cout << "Error loading network socket in port 54001" << std::endl;
+    std::cout << "Error loading network socket in port " << portToBindTo << "!" << std::endl;
   }
   socket.setBlocking(false);
-  sf::IpAddress recipient = "192.168.200.151";
-  unsigned short port = 54000;
+  std::cout << "Please enter ip of server: ";
+  std::cin >> serverIpAddress;
+  sf::IpAddress recipient = serverIpAddress;
+  // hard coded to 54000 for now
+  //std::cout << "Please enter port of server: ";
+  unsigned short portOfServer = 54000;
+  //std::cin >> portOfServer;
   
 
   // window management
@@ -115,7 +125,7 @@ int main()
     sf::Int64 playerPositionY = player.getPosition().y;
     sf::Packet packet;
     packet << playerPositionX << playerPositionY;
-    socket.send(packet, recipient, port);
+    socket.send(packet, recipient, portOfServer);
 
     // DRAWING
     // clear everything black

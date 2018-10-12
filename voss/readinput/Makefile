@@ -1,0 +1,3 @@
+all:
+	g++ -c main.cpp
+	g++ main.o -o main 
