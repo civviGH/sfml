@@ -1,8 +1,8 @@
 #include "UpdatePacket.h"
 #include <string>
-#include <SFML/Network>
+#include <SFML/Network.hpp>
 
-WelcomePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
+UpdatePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
 {
     name = n;
     ip = i;

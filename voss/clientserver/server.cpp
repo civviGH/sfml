@@ -1,8 +1,19 @@
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <stdlib.h>
 #include <iostream>
 /*
+welcome [0]:
+  name
+anwort [1]:
+  id
 
+update [2]:
+  position vom spieler
+  id
+antwort [3]:
+  position und name aller spieler
 */
 int main()
 {
@@ -15,22 +26,48 @@ int main()
   }
   socket.setBlocking(false);
   sf::Packet packet;
+  sf::Uint32 packetType;
   std::cout << "Started server on port 54000. Listening." << std::endl;
 
   // Window
-  sf::Window window(sf::VideoMode(200, 200), "server");
-  window.setFramerateLimt(60);
+  sf::RenderWindow window(sf::VideoMode(1920, 1080), "server");
+  window.setFramerateLimit(60);
   window.setKeyRepeatEnabled(false);
 
+  sf::IpAddress sender;
+  unsigned short port;
 
   while (window.isOpen())
   {
+    // check all events
     sf::Event event;
     while (window.pollEvent(event))
     {
       // "close requested" event: we close the window
       if (event.type == sf::Event::Closed)
         window.close();
+    }
+    socket.receive(packet, sender, port);
+    while(packet >> packetType)
+    {
+      // as long as we have packets on the socket, keep reading them
+      if (packetType == 0)
+      {
+        // welcome packet
+        std::string name;
+        packet >> name;
+        std::cout << "Welcome packet from " << sender << " with name " << name << std::endl;
+      }
+      else if (packetType == 2)
+      {
+        // update packet from player
+
+      }
+      else
+      {
+        std::cout << "Got packet with unknown type " << packetType << std::endl;
+      }
+      socket.receive(packet, sender, port);
     }
   }
 }

@@ -2,25 +2,12 @@
 #define UPDATEPACKET_H
 
 #include <string>
-#include <SFML/Network>
-/*
-welcome:
-  name
-  eigene ip, eigener port
-anwort:
-  id
-
-update:
-  position vom spieler
-  id
-antwort:
-  position und name aller spieler
-*/
+#include <SFML/Network.hpp>
 
 struct WelcomePacket
 {
   std::string name;
-  std::string ip;
+  sf::IpAddress ip;
   unsigned short port;
 };
 struct PlayerUpdate
