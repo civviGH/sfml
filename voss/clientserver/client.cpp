@@ -77,7 +77,7 @@ int main()
   int offset_x = (playerName.getLocalBounds().width / 2) - player.getLocalBounds().width/2;
   int offset_y = player.getLocalBounds().height;
   sf::Vector2f offset(offset_x, offset_y);
-  
+
   // window management
   sf::RenderWindow window(sf::VideoMode(1920, 1080), "client");
   window.setFramerateLimit(60);
@@ -145,6 +145,12 @@ int main()
     // put text over player
     playerName.setPosition(player.getPosition() - offset);
 
+    // give server update about position
+    PlayerUpdate pU(player.getPosition().x, player.getPosition().y, ownId);
+    sf::Packet packet;
+    packet << (sf::Uint32) 2 << pU;
+    socket.send(packet, serverIpAddress, portOfServer);
+    // draw everything
     window.clear(sf::Color::Black);
     window.draw(player);
     window.draw(playerName);

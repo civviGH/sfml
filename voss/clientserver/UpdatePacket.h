@@ -16,8 +16,8 @@ struct PlayerUpdate
 {
   sf::Int64 x_pos;
   sf::Int64 y_pos;
-  std::string name;
-  PlayerUpdate(sf::Int64 x, sf::Int64 y, std::string n);
+  sf::Uint32 id;
+  PlayerUpdate(sf::Int64 x, sf::Int64 y, sf::Uint32 i);
 };
 struct UpdatePacket
 {
@@ -25,9 +25,13 @@ struct UpdatePacket
   UpdatePacket();
 };
 
-// packet >> operator overwrite for custom packets
-//sf::Packet& operator <<(sf::Packet& packet, const Character& character)
-//{
-//    return packet << character.age << character.name << character.weight;
-//}
+// packet >> operator overwrite for PlayerUpdate
+sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate)
+{
+    return packet << pUpdate.x_pos << pUpdate.y_pos << pUpdate.id;
+}
+sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate)
+{
+    return packet >> pUpdate.x_pos >> pUpdate.y_pos >> pUpdate.id;
+}
 #endif

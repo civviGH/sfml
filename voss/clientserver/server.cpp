@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include <stdlib.h>
 #include <iostream>
+#include "UpdatePacket.h"
 /*
 welcome [0]:
   name
@@ -37,7 +38,10 @@ int main()
   sf::IpAddress sender;
   unsigned short port;
 
+  // client mgmt
   sf::Uint32 lowestId = 0;
+  std::map<sf::Uint32, std::string> clients[256];
+  std::map& operator
 
   while (window.isOpen())
   {
@@ -64,12 +68,15 @@ int main()
         packetToSend << (sf::Uint32) 1 << lowestId;
         socket.send(packetToSend, sender, port);
         std::cout << "Sent id " << lowestId << " to " << name << std::endl;
+        clients[lowestId] = name;
         lowestId += 1;
       }
       else if (packetType == 2)
       {
         // update packet from player
-
+        PlayerUpdate pU();
+        packet >> pU;
+        std::cout << "Update packet from id " << pU.id << " | " << pU.x_pos << "," << pU.y_pos << std::endl;
       }
       else
       {

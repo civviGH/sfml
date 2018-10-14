@@ -8,11 +8,17 @@ WelcomePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
     ip = i;
     port = p;
 }
-PlayerUpdate::PlayerUpdate(sf::Int64 x, sf::Int64 y, std::string n)
+PlayerUpdate::PlayerUpdate(sf::Int64 x, sf::Int64 y, sf::Uint32 i)
 {
   x_pos = x;
   y_pos = y;
-  name = n;
+  id = i;
+}
+PlayerUpdate::PlayerUpdate()
+{
+  x_pos = 0;
+  y_pos = 0;
+  id = 0;
 }
 UpdatePacket::UpdatePacket()
 {
