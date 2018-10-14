@@ -2,7 +2,7 @@
 #include <string>
 #include <SFML/Network.hpp>
 
-UpdatePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
+WelcomePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
 {
     name = n;
     ip = i;
@@ -14,7 +14,7 @@ PlayerUpdate::PlayerUpdate(sf::Int64 x, sf::Int64 y, std::string n)
   y_pos = y;
   name = n;
 }
-UpdatePacket::UpdatePacket(PlayerUpdate *updates)
+UpdatePacket::UpdatePacket()
 {
-  playerUpdates = updates;
+  playerUpdates.reserve(16);
 }

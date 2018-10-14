@@ -37,6 +37,8 @@ int main()
   sf::IpAddress sender;
   unsigned short port;
 
+  sf::Uint32 lowestId = 0;
+
   while (window.isOpen())
   {
     // check all events
@@ -57,6 +59,12 @@ int main()
         std::string name;
         packet >> name;
         std::cout << "Welcome packet from " << sender << " with name " << name << std::endl;
+        // send id
+        sf::Packet packetToSend;
+        packetToSend << (sf::Uint32) 1 << lowestId;
+        socket.send(packetToSend, sender, port);
+        std::cout << "Sent id " << lowestId << " to " << name << std::endl;
+        lowestId += 1;
       }
       else if (packetType == 2)
       {
@@ -69,5 +77,8 @@ int main()
       }
       socket.receive(packet, sender, port);
     }
+    window.clear(sf::Color::Black);
+
+    window.display();
   }
 }

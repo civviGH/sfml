@@ -13,7 +13,7 @@ int main()
   bool aPressed = false;
 
   double playerSpeed = 5.0;
-  
+
   // socket for network
   sf::UdpSocket socket;
   int portToBindTo;
@@ -32,13 +32,14 @@ int main()
   //std::cout << "Please enter port of server: ";
   unsigned short portOfServer = 54000;
   //std::cin >> portOfServer;
-  
+
+
 
   // window management
   sf::RenderWindow window(sf::VideoMode(800, 600), "client");
   window.setFramerateLimit(60);
   window.setKeyRepeatEnabled(false);
-  
+
   // create player
   sf::CircleShape player(10);
   player.setFillColor(sf::Color(100, 250, 50));
@@ -130,7 +131,7 @@ int main()
     // DRAWING
     // clear everything black
     window.clear(sf::Color::Black);
-  
+
     // draw player
     window.draw(player);
 
