@@ -40,8 +40,8 @@ int main()
 
   // client mgmt
   sf::Uint32 lowestId = 0;
-  std::map<sf::Uint32, std::string> clients[256];
-  std::map& operator
+  std::map<sf::Uint32, std::string> clients;
+  //std::map& operator
 
   while (window.isOpen())
   {
@@ -74,7 +74,7 @@ int main()
       else if (packetType == 2)
       {
         // update packet from player
-        PlayerUpdate pU();
+        PlayerUpdate pU = PlayerUpdate();
         packet >> pU;
         std::cout << "Update packet from id " << pU.id << " | " << pU.x_pos << "," << pU.y_pos << std::endl;
       }

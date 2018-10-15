@@ -18,6 +18,7 @@ struct PlayerUpdate
   sf::Int64 y_pos;
   sf::Uint32 id;
   PlayerUpdate(sf::Int64 x, sf::Int64 y, sf::Uint32 i);
+  PlayerUpdate();
 };
 struct UpdatePacket
 {
@@ -28,7 +29,7 @@ struct UpdatePacket
 // packet >> operator overwrite for PlayerUpdate
 sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate)
 {
-    return packet << pUpdate.x_pos << pUpdate.y_pos << pUpdate.id;
+   return packet << pUpdate.x_pos << pUpdate.y_pos << pUpdate.id;
 }
 sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate)
 {
