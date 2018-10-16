@@ -2,9 +2,9 @@
 *.swp
 
 # cv output file
-**app
-**server
-**client
+*app
+*server
+*client
 
 # Prerequisites
 *.d
