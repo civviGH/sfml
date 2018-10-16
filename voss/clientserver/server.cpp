@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "UpdatePacket.h"
+#include "Player.h"
 /*
 welcome [0]:
   name
@@ -40,7 +41,7 @@ int main()
 
   // client mgmt
   sf::Uint32 lowestId = 0;
-  std::map<sf::Uint32, std::string> clients;
+  std::map<sf::Uint32, Player> clients;
   //std::map& operator
 
   while (window.isOpen())
@@ -68,15 +69,16 @@ int main()
         packetToSend << (sf::Uint32) 1 << lowestId;
         socket.send(packetToSend, sender, port);
         std::cout << "Sent id " << lowestId << " to " << name << std::endl;
-        clients[lowestId] = name;
+        // create player object, put it in map
+        clients[lowestId] = Player(lowestId, name, sf::Color::Red);
         lowestId += 1;
       }
       else if (packetType == 2)
       {
         // update packet from player
-        PlayerUpdate pU = PlayerUpdate();
+        PlayerUpdate pU;
         packet >> pU;
-        std::cout << "Update packet from id " << pU.id << " | " << pU.x_pos << "," << pU.y_pos << std::endl;
+	std::cout << "Update packet from id " << pU.id << " | " << pU.x_pos << "," << pU.y_pos << std::endl;
       }
       else
       {

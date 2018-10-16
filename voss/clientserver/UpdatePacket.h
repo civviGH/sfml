@@ -26,13 +26,6 @@ struct UpdatePacket
   UpdatePacket();
 };
 
-// packet >> operator overwrite for PlayerUpdate
-sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate)
-{
-   return packet << pUpdate.x_pos << pUpdate.y_pos << pUpdate.id;
-}
-sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate)
-{
-    return packet >> pUpdate.x_pos >> pUpdate.y_pos >> pUpdate.id;
-}
+sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate);
+sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate);
 #endif

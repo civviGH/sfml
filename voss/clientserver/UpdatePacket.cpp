@@ -1,6 +1,6 @@
-#include "UpdatePacket.h"
 #include <string>
 #include <SFML/Network.hpp>
+#include "UpdatePacket.h"
 
 WelcomePacket::WelcomePacket(std::string n, std::string i, unsigned short p)
 {
@@ -23,4 +23,13 @@ PlayerUpdate::PlayerUpdate()
 UpdatePacket::UpdatePacket()
 {
   playerUpdates.reserve(16);
+}
+
+sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate)
+{
+   return packet << pUpdate.x_pos << pUpdate.y_pos << pUpdate.id;
+}
+sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate)
+{
+    return packet >> pUpdate.x_pos >> pUpdate.y_pos >> pUpdate.id;
 }

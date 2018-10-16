@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 
+#include "UpdatePacket.h"
+
 int main()
 {
   sf::UdpSocket socket;
