@@ -41,7 +41,7 @@ int main()
 
   // client mgmt
   sf::Uint32 lowestId = 0;
-  std::map<sf::Uint32, Player> clients;
+  std::map<sf::Uint32, Player*> clients;
   //std::map& operator
 
   while (window.isOpen())
@@ -70,7 +70,7 @@ int main()
         socket.send(packetToSend, sender, port);
         std::cout << "Sent id " << lowestId << " to " << name << std::endl;
         // create player object, put it in map
-        clients[lowestId] = Player(lowestId, name, sf::Color::Red);
+        clients[lowestId] = new Player(lowestId, name, sf::Color::Red);
         lowestId += 1;
       }
       else if (packetType == 2)
@@ -78,7 +78,8 @@ int main()
         // update packet from player
         PlayerUpdate pU;
         packet >> pU;
-	std::cout << "Update packet from id " << pU.id << " | " << pU.x_pos << "," << pU.y_pos << std::endl;
+        Player *p = clients[pU.id];
+        p->setPosition(pU.x_pos, pU.y_pos);
       }
       else
       {
@@ -88,6 +89,13 @@ int main()
     }
     window.clear(sf::Color::Black);
 
+    // draw all players.
+    for (int i=0; i<lowestId; i = i + 1)
+    {
+      Player *p = clients[i];
+      window.draw(p->getShape());
+      window.draw(p->getName());
+    }
     window.display();
   }
 }
