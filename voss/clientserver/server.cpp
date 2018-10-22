@@ -1,8 +1,10 @@
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+
 #include <stdlib.h>
 #include <iostream>
+
 #include "UpdatePacket.h"
 #include "Player.h"
 /*
@@ -16,6 +18,8 @@ update [2]:
   id
 antwort [3]:
   position und name aller spieler
+antwort [4]:
+  neuer spieler joined
 */
 int main()
 {
@@ -40,7 +44,7 @@ int main()
   unsigned short port;
 
   // client mgmt
-  sf::Uint32 lowestId = 0;
+  sf::Uint32 nextId = 0;
   std::map<sf::Uint32, Player*> clients;
   //std::map& operator
 
@@ -66,12 +70,30 @@ int main()
         std::cout << "Welcome packet from " << sender << " with name " << name << std::endl;
         // send id
         sf::Packet packetToSend;
-        packetToSend << (sf::Uint32) 1 << lowestId;
+        packetToSend << (sf::Uint32) 1 << nextId;
+        // put all id and names into the packet
+        for (int i=0; i<nextId; i++)
+        {
+          Player *p = clients[i];
+          packetToSend << i << p->getNameString();
+        }
         socket.send(packetToSend, sender, port);
-        std::cout << "Sent id " << lowestId << " to " << name << std::endl;
+        std::cout << "Sent id " << nextId << " to " << name << std::endl;
         // create player object, put it in map
-        clients[lowestId] = new Player(lowestId, name, sf::Color::Red);
-        lowestId += 1;
+        clients[nextId] = new Player(nextId, name, sf::Color::Red, sender, port);
+
+        // tell all clients there is a new player
+        sf::Packet newPlayerPacket;
+        newPlayerPacket << (sf::Uint32) 4;
+        newPlayerPacket << (sf::Uint32) nextId;
+        newPlayerPacket << name;
+        for (auto const& x : clients)
+        {
+          if (nextId == x.first)
+            continue;
+          socket.send(newPlayerPacket, x.second->getIp(), x.second->getPort());
+        }
+        nextId += 1;
       }
       else if (packetType == 2)
       {
@@ -80,6 +102,15 @@ int main()
         packet >> pU;
         Player *p = clients[pU.id];
         p->setPosition(pU.x_pos, pU.y_pos);
+        // send update to every client except the one who sent it
+        for (auto const& x : clients)
+        {
+          if (x.second->getId() == pU.id)
+            continue;
+          sf::Packet packet;
+          packet << (sf::Uint32) 2 << pU;
+          socket.send(packet, x.second->getIp(), x.second->getPort());
+        }
       }
       else
       {
@@ -87,10 +118,12 @@ int main()
       }
       socket.receive(packet, sender, port);
     }
+
+    // submit position of all players to all players
     window.clear(sf::Color::Black);
 
     // draw all players.
-    for (int i=0; i<lowestId; i = i + 1)
+    for (int i=0; i<nextId; i++)
     {
       Player *p = clients[i];
       window.draw(p->getShape());

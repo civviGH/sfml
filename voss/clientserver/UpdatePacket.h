@@ -23,9 +23,13 @@ struct PlayerUpdate
 struct UpdatePacket
 {
   std::vector<PlayerUpdate> playerUpdates;
+  sf::Uint32 size;
   UpdatePacket();
+  UpdatePacket(sf::Uint32 n);
 };
 
 sf::Packet& operator <<(sf::Packet& packet, const PlayerUpdate& pUpdate);
 sf::Packet& operator >>(sf::Packet& packet, PlayerUpdate& pUpdate);
+sf::Packet& operator <<(sf::Packet& packet, const UpdatePacket& updateP);
+sf::Packet& operator >>(sf::Packet& packet, UpdatePacket& updateP);
 #endif

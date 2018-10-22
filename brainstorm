@@ -19,3 +19,16 @@ server:
   solang aufm socket lauschen, bis man alles gehoert hat
   jedem sagen was man weiss
   rendern was man weiss  
+
+
+
+player haben
+  id
+  namen
+  position
+  ip
+  port
+
+server hat
+  liste von playern
+wenn jemand connected, id geben, player object anlegen, in liste packen

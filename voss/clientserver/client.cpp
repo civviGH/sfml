@@ -6,6 +6,7 @@
 #include <string>
 
 #include "UpdatePacket.h"
+#include "Player.h"
 
 int main()
 {
@@ -51,34 +52,27 @@ int main()
   bool aPressed = false;
   double playerSpeed = 5.0;
 
+  // network clients
+  std::map<sf::Uint32, Player*> clients;
+
   if (packetType == 1)
   {
     packet >> ownId;
     std::cout << "Got response from server with id " << ownId << std::endl;
+    clients[ownId] = new Player(ownId, name, sf::Color(100, 250, 50), "127.0.0.1", portToBindTo);
+    sf::Uint32 clientId;
+    std::string clientName;
+    while (packet >> clientId >> clientName)
+    {
+      clients[clientId] = new Player(clientId, clientName, sf::Color::Red, sender, port);
+    }
   }
-  else {
+  else
+  {
     std::cout << "Unknown packet type " << packetType << " in server response" << std::endl;
     exit;
   }
   socket.setBlocking(false);
-
-  // text over player head
-  sf::Font font;
-  if (!font.loadFromFile("arial.ttf"))
-  {
-    std::cout << "Could not load font arial.ttf" << std::endl;
-    exit;
-  }
-  sf::Text playerName;
-  playerName.setFont(font);
-  playerName.setString(name);
-  playerName.setCharacterSize(15);
-  playerName.setFillColor(sf::Color::Red);
-  playerName.setStyle(sf::Text::Bold);
-
-  int offset_x = (playerName.getLocalBounds().width / 2) - player.getLocalBounds().width/2;
-  int offset_y = player.getLocalBounds().height;
-  sf::Vector2f offset(offset_x, offset_y);
 
   // window management
   sf::RenderWindow window(sf::VideoMode(1920, 1080), "client");
@@ -116,26 +110,55 @@ int main()
           aPressed = false;
       }
     }
+    // NETWORK
+    socket.receive(packet, sender, port);
+    while(packet >> packetType)
+    {
+      if (packetType == 2)
+      {
+        // playerUpdate
+        PlayerUpdate pU;
+        packet >> pU;
+        Player *p = clients[pU.id];
+        p->setPosition(pU.x_pos, pU.y_pos);
+      }
+      else if (packetType == 4)
+      {
+        std::cout << "got player added packet" << std::endl;
+        sf::Uint32 clientId;
+        packet >> clientId;
+        std::string clientName;
+        packet >> clientName;
+        clients[clientId] = new Player(clientId, clientName, sf::Color::Red, sender, port);
+      }
+      else
+      {
+        std::cout << "unknown packet type received" << std::endl;
+      }
+      socket.receive(packet, sender, port);
+    }
     // MOVEMENT
+    Player *p = clients[ownId];
     if (wPressed)
     {
-      player.move(0, -1 * playerSpeed);
+      p->movePosition(0, -1 * playerSpeed);
     }
     else if (sPressed)
     {
-      player.move(0, playerSpeed);
+      p->movePosition(0, playerSpeed);
     }
     if (dPressed)
     {
-      player.move(playerSpeed, 0);
+      p->movePosition(playerSpeed, 0);
     }
     else if (aPressed)
     {
-      player.move(-1 * playerSpeed, 0);
+      p->movePosition(-1 * playerSpeed, 0);
     }
 
     // limit movement to boundaries
     // origin of shape is top left
+    /*
     if (player.getPosition().x < 0)
       player.setPosition(0, player.getPosition().y);
     if (player.getPosition().y < 0)
@@ -146,16 +169,19 @@ int main()
       player.setPosition(player.getPosition().x, window.getSize().y - player.getGlobalBounds().height);
     // put text over player
     playerName.setPosition(player.getPosition() - offset);
-
+    */
     // give server update about position
-    PlayerUpdate pU(player.getPosition().x, player.getPosition().y, ownId);
+    PlayerUpdate pU(p->getXPos(), p->getYPos(), ownId);
     sf::Packet packet;
     packet << (sf::Uint32) 2 << pU;
     socket.send(packet, serverIpAddress, portOfServer);
     // draw everything
     window.clear(sf::Color::Black);
-    window.draw(player);
-    window.draw(playerName);
+    for (auto const& x : clients)
+    {
+      window.draw(x.second->getShape());
+      window.draw(x.second->getName());
+    }
     window.display();
   }
 }
